@@ -2,30 +2,21 @@ document.getElementById("person").addEventListener("keyup", function(e){
     if(e.keyCode == 13)
 	{
 			var searchText = e.target.value.trim();		
-			if (isStringArray(searchText)){	
-				if (isFarmSearch(searchText)){
-					var id = splitString(searchText)[1];
-					if (isNumber(id))
-					{
-						openUrlNewTab('http://emtriage.us.oracle.com/cgi/high_level_dif_report4.pl?farm_id=',id);				
-					}
-					else{
-						openUrlNewTab('http://emtriage.us.oracle.com/cgi/list_user_farm_jobs.pl?uid=',id);			
-					}
+			if (isFarmSearch(searchText)){
+				var type = getFarmSearchType(searchText);
+				var farmSearchText = splitString(searchText)[1];
+				if ('farm_id' === type){
+					openUrlNewTab(FARM_ID_URL,farmSearchText);
 				}
-				else{
-					openUrlNewTab('https://people.us.oracle.com/pls/oracle/f?p='+8000+':1:'+4098291047319+':::RP,RIR:P1_SEARCH,P1_SEARCH_TYPE:',searchText);				
-				}				
+				else if ('uid' === type){
+					openUrlNewTab(FARM_UID_URL,farmSearchText);
+				}
 			}
-			else{
-				if (isNumber(searchText))
-				{
-					openUrlNewTab('https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=',searchText);				
-				}
-				else
-				{
-					openUrlNewTab('https://people.us.oracle.com/pls/oracle/f?p='+8000+':1:'+4098291047319+':::RP,RIR:P1_SEARCH,P1_SEARCH_TYPE:',searchText);				
-				}	
+			else if (isBugSearch(searchText)){
+				openUrlNewTab(BUG_URL,searchText);
+			}
+			else if (isPersonSearch(searchText)){
+				openUrlNewTab(ARIA_URL,searchText);
 			}
 	}
 });
@@ -51,7 +42,7 @@ function isFarmSearch(value){
 
 function getFarmSearchType(value){
 	var sArray = value.split(" ");
-	if (isNumber(sArray[0]))
+	if (isNumber(sArray[1]))
 		return 'farm_id';
 	else
 		return 'uid';
@@ -67,9 +58,12 @@ function isBugSearch(value){
 	}
 }
 
-function isPersonSearch(value){
+function isPersonSearch(value){	
 	if (!isStringArray(value) && !isNumber(value))
 	{
+		return true;
+	}
+	else if (isStringArray(value) && !isFarmSearch(value)){
 		return true;
 	}
 	else{
