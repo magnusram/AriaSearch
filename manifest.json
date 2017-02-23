@@ -1,0 +1,29 @@
+{
+
+  "manifest_version": 2,
+  "name": "Aria",
+  "version": "1.0.2",
+
+  "description": "Person Search: Aria",  
+  "icons": {
+    "48": "icons/aria-48.png"
+  },
+
+  "permissions": [
+    "activeTab"
+  ],
+
+  "browser_action": {
+    "default_icon": "icons/aria-48.png",
+    "default_title": "Aria",
+    "default_popup": "aria.html"
+  },
+  
+  "applications": {
+  "gecko": {
+    "id": "aria-search@example.com",
+    "strict_min_version": "42.0"
+  }
+}
+
+}
