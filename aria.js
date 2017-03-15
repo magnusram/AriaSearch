@@ -1,22 +1,43 @@
 document.getElementById("person").addEventListener("keyup", function(e){
     if(e.keyCode == 13)
 	{
-			var searchText = e.target.value.trim();		
-			if (isFarmSearch(searchText)){
-				var type = getFarmSearchType(searchText);
-				var farmSearchText = splitString(searchText)[1];
-				if ('farm_id' === type){
-					openUrlNewTab(FARM_ID_URL,farmSearchText);
-				}
-				else if ('uid' === type){
-					openUrlNewTab(FARM_UID_URL,farmSearchText);
-				}
+			var searchText = e.target.value.trim();	
+			if(isUserRegistration(searchText)){				
+				this.value = 'Registered!';
+				this.setSelectionRange(0, this.value.length);
 			}
-			else if (isBugSearch(searchText)){
-				openUrlNewTab(BUG_URL,searchText);
-			}
-			else if (isPersonSearch(searchText)){
-				openUrlNewTab(ARIA_URL,searchText);
+			else{
+				if (splitString(searchText).length === 1 && searchText.length === 1){									
+						if (searchText === 'f'){
+							if (window.localStorage.user)
+								openUrlNewTab(FARM_UID_URL,window.localStorage.user);
+						}
+						else if (searchText === 'o'){
+							openUrlNewTab(OREVIEW_URL,'');
+						}
+						else if (searchText === 'm'){
+							openUrlNewTab(MREQ_URL,'');
+						}				
+				}
+				else
+				{
+					if (isFarmSearch(searchText)){
+						var type = getFarmSearchType(searchText);
+						var farmSearchText = splitString(searchText)[1];
+						if ('farm_id' === type){
+							openUrlNewTab(FARM_ID_URL,farmSearchText);
+						}
+						else if ('uid' === type){
+							openUrlNewTab(FARM_UID_URL,farmSearchText);
+						}
+					}
+					else if (isBugSearch(searchText)){
+						openUrlNewTab(BUG_URL,searchText);
+					}
+					else if (isPersonSearch(searchText)){
+						openUrlNewTab(ARIA_URL,searchText);
+					}
+				}
 			}
 	}
 });
@@ -74,6 +95,14 @@ function isPersonSearch(value){
 function splitString(value){
 	var sArray = value.split(" ");
 	return sArray;
+}
+
+function isUserRegistration(value){
+	var valArr = splitString(value);
+	if (valArr.length > 1 && valArr[0] === '*'){
+		window.localStorage.setItem('user', valArr[1]);
+		return true;
+	}	
 }
 
 function openUrlNewTab(site, queryParam){
